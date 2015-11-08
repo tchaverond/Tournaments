@@ -47,7 +47,7 @@ class Window :
 		# size of elements in brackets
 		self.x_size = 80
 		self.y_size = 40
-		self.x_gap = 20
+		self.x_gap = 40
 		self.y_gap = 8
 
 
@@ -68,14 +68,36 @@ class Window :
 
 	def draw_sb(self, nb_teams = 16) :
 
-		if nb_teams not in [2,4,8,16,32,64,128] :
+		mult_2 = [2**i for i in xrange(1,13,1)]
 
-			# TO DO
-			pass
-			
+		if nb_teams > mult_2[len(mult_2)-1] :
 
-		imax = nb_teams/2
-		phase = 1
+			print "Number of teams is too high."
+			return -1
+
+		if nb_teams in mult_2 :
+
+			phase = 1
+
+		else :
+
+			phase = 2
+			matches_to_add = min([nb_teams-i for i in mult_2 if (nb_teams-i) > 0])
+			order = sb_placement(nb_teams)
+
+			# IN PROGRESS : adding the additional maches at the right position
+			for i in xrange(1,matches_to_add+1,1) :
+
+				print order[i-1]
+				top_x = self.x_gap
+				top_y = self.y_gap + (order[i-1]-1)*(self.y_size+self.y_gap)
+				bottom_x = top_x + self.x_size
+				bottom_y = top_y + self.y_size
+				self.tree.create_rectangle(top_x,top_y,bottom_x,bottom_y,outline="black")
+				self.tree.create_line(top_x,top_y+self.y_size/2,bottom_x,top_y+self.y_size/2,fill="black")
+
+
+		imax = (nb_teams-matches_to_add)/2
 
 		while imax > 0 :
 
@@ -92,6 +114,29 @@ class Window :
 			imax = imax/2
 
 
+
+def sb_placement(n) :
+
+	nb_teams = n
+	matches = [1,2]
+	phase = 2
+
+	while 2**phase <= nb_teams :
+
+		for i in xrange(1,2*len(matches),2) :
+
+			if (i+1)%4 == 2 :
+				matches.insert(i,((2**phase)+1)-matches[i-1])
+
+			else :
+				matches.insert(i-1,((2**phase)+1)-matches[i-1])
+
+		phase += 1
+
+	matches.reverse()
+	return matches
+
+
 pouet = Window()
-pouet.draw_sb(256)
+pouet.draw_sb(24)
 pouet.master.mainloop()
