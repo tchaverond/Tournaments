@@ -45,7 +45,7 @@ class Window :
 
 
 		# size of elements in brackets
-		self.x_size = 80
+		self.x_size = 100
 		self.y_size = 40
 		self.x_gap = 40
 		self.y_gap = 8
@@ -66,7 +66,9 @@ class Window :
 
 	#         |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||         #
 
-	def draw_sb(self, nb_teams = 16) :
+	# TODO : comments + organization
+	# make sure there are enough nb_teams = len(names)
+	def draw_sb(self, nb_teams = 16, names = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p"]) :
 
 		mult_2 = [2**i for i in xrange(1,13,1)]
 
@@ -75,29 +77,37 @@ class Window :
 			print "Number of teams is too high."
 			return -1
 
+		order = sb_placement(nb_teams)
+		order.reverse()
+
 		if nb_teams in mult_2 :
 
 			phase = 1
+			matches_to_add = 0
 
 		else :
 
 			phase = 2
 			matches_to_add = min([nb_teams-i for i in mult_2 if (nb_teams-i) > 0])
-			order = sb_placement(nb_teams)
+			closest_upper = min([i for i in mult_2 if i > nb_teams])
+			suborder = sb_placement(closest_upper)
+			#print order,suborder
 
-			# IN PROGRESS : adding the additional maches at the right position
 			for i in xrange(1,matches_to_add+1,1) :
 
-				print order[i-1]
 				top_x = self.x_gap
 				top_y = self.y_gap + (order[i-1]-1)*(self.y_size+self.y_gap)
 				bottom_x = top_x + self.x_size
 				bottom_y = top_y + self.y_size
 				self.tree.create_rectangle(top_x,top_y,bottom_x,bottom_y,outline="black")
+				self.tree.create_text(top_x+2,top_y+2,anchor="nw",text=names[suborder[2*order[i-1]-2]-1])
 				self.tree.create_line(top_x,top_y+self.y_size/2,bottom_x,top_y+self.y_size/2,fill="black")
+				self.tree.create_text(top_x+2,top_y+self.y_size/2+2,anchor="nw",text=names[suborder[2*order[i-1]-1]-1])
+
 
 
 		imax = (nb_teams-matches_to_add)/2
+		order.reverse()
 
 		while imax > 0 :
 
@@ -109,6 +119,15 @@ class Window :
 				bottom_y = top_y + self.y_size
 				self.tree.create_rectangle(top_x,top_y,bottom_x,bottom_y,outline="black")
 				self.tree.create_line(top_x,top_y+self.y_size/2,bottom_x,top_y+self.y_size/2,fill="black")
+
+				if imax == (nb_teams-matches_to_add)/2 :
+
+					if order[2*i-2] <= nb_teams-matches_to_add*2 :
+						self.tree.create_text(top_x+2,top_y+2,anchor="nw",text=names[order[2*i-2]-1])
+
+					if order[2*i-1] <= nb_teams-matches_to_add*2 :
+						self.tree.create_text(top_x+2,top_y+self.y_size/2+2,anchor="nw",text=names[order[2*i-1]-1])
+
 
 			phase += 1
 			imax = imax/2
@@ -133,10 +152,9 @@ def sb_placement(n) :
 
 		phase += 1
 
-	matches.reverse()
 	return matches
 
 
 pouet = Window()
-pouet.draw_sb(24)
+pouet.draw_sb(14)
 pouet.master.mainloop()
