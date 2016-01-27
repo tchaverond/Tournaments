@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*
 
 from Tkinter import*
+import random
+import sys
 
 
 class Window :
@@ -156,5 +158,14 @@ def sb_placement(n) :
 
 
 pouet = Window()
-pouet.draw_sb(14)
+
+nb_teams = int(sys.argv[1])
+
+names = []
+
+for i in xrange(nb_teams) :
+	
+	names.append("".join([random.choice(['a','z','e','r','t','y','u','i','o','p','q','s','d','f','g','h','j','k','l','m','w','x','c','v','b','n']) for j in xrange(3)]))
+
+pouet.draw_sb(nb_teams,names)
 pouet.master.mainloop()
