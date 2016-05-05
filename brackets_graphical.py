@@ -5,6 +5,29 @@ import random
 import sys
 
 
+
+# list contanining all matches that have to be played / have been played, in order
+global decider
+decider = []
+
+
+class Match :
+
+	def __init__(self, id_team1, id_team2, name1, name2, top_x, top_y, bottom_x, bottom_y) :
+
+		self.id_team1 = id_team1
+		self.id_team2 = id_team2
+		self.name1 = name1
+		self.name2 = name2
+		self.coords = [top_x,top_y,bottom_x,bottom_y]
+		self.played = False
+
+
+	def __repr__(self) :
+
+		return "Match between "+self.name1+" and "+self.name2+ ", has been played : "+str(self.played)
+
+
 class Window :
 
 	def __init__(self) :
@@ -92,8 +115,8 @@ class Window :
 			phase = 2
 			matches_to_add = min([nb_teams-i for i in mult_2 if (nb_teams-i) > 0])
 			closest_upper = min([i for i in mult_2 if i > nb_teams])
-			suborder = sb_placement(closest_upper)
-			#print order,suborder
+			suporder = sb_placement(closest_upper)
+			print order,suporder
 
 			for i in xrange(1,matches_to_add+1,1) :
 
@@ -102,15 +125,20 @@ class Window :
 				bottom_x = top_x + self.x_size
 				bottom_y = top_y + self.y_size
 				self.tree.create_rectangle(top_x,top_y,bottom_x,bottom_y,outline="black")
-				self.tree.create_text(top_x+2,top_y+2,anchor="nw",text=names[suborder[2*order[i-1]-2]-1])
+				self.tree.create_text(top_x+2,top_y+2,anchor="nw",text=names[suporder[2*order[i-1]-2]-1])
 				self.tree.create_line(top_x,top_y+self.y_size/2,bottom_x,top_y+self.y_size/2,fill="black")
-				self.tree.create_text(top_x+2,top_y+self.y_size/2+2,anchor="nw",text=names[suborder[2*order[i-1]-1]-1])
+				self.tree.create_text(top_x+2,top_y+self.y_size/2+2,anchor="nw",text=names[suporder[2*order[i-1]-1]-1])
+
+				id1 = suporder[2*order[i-1]-2]
+				id2 = suporder[2*order[i-1]-1]
+				decider.append(Match(id1,id2,names[id1-1],names[id2-1],top_x,top_y,bottom_x,bottom_y))
 
 
 
 		imax = (nb_teams-matches_to_add)/2
 		order.reverse()
 
+		
 		while imax > 0 :
 
 			for i in xrange(1,imax+1,1) :
@@ -168,4 +196,6 @@ for i in xrange(nb_teams) :
 	names.append("".join([random.choice(['a','z','e','r','t','y','u','i','o','p','q','s','d','f','g','h','j','k','l','m','w','x','c','v','b','n']) for j in xrange(3)]))
 
 pouet.draw_sb(nb_teams,names)
+for match in decider :
+	print match
 pouet.master.mainloop()
