@@ -121,17 +121,18 @@ class Window :
 
 			for i in xrange(1,matches_to_add+1,1) :
 
+				id1 = suporder[2*order[i-1]-2]
+				id2 = suporder[2*order[i-1]-1]
+
 				top_x = self.x_gap
 				top_y = self.y_gap + (order[i-1]-1)*(self.y_size+self.y_gap)
 				bottom_x = top_x + self.x_size
 				bottom_y = top_y + self.y_size
 				self.tree.create_rectangle(top_x,top_y,bottom_x,bottom_y,outline="black")
-				self.tree.create_text(top_x+2,top_y+2,anchor="nw",text=names[suporder[2*order[i-1]-2]-1])
+				self.tree.create_text(top_x+2,top_y+2,anchor="nw",text=names[id1-1])
 				self.tree.create_line(top_x,top_y+self.y_size/2,bottom_x,top_y+self.y_size/2,fill="black")
-				self.tree.create_text(top_x+2,top_y+self.y_size/2+2,anchor="nw",text=names[suporder[2*order[i-1]-1]-1])
+				self.tree.create_text(top_x+2,top_y+self.y_size/2+2,anchor="nw",text=names[id2-1])
 
-				id1 = suporder[2*order[i-1]-2]
-				id2 = suporder[2*order[i-1]-1]
 				decider.append(Match(id1,id2,names[id1-1],names[id2-1],top_x,top_y,bottom_x,bottom_y,phase-1))
 
 
@@ -161,12 +162,12 @@ class Window :
 				if imax == (nb_teams-matches_to_add)/2 :
 
 					if order[2*i-2] <= nb_teams-matches_to_add*2 :
-						self.tree.create_text(top_x+2,top_y+2,anchor="nw",text=names[order[2*i-2]-1])
 						name1 = names[id1-1]
+						self.tree.create_text(top_x+2,top_y+2,anchor="nw",text=name1)
 
 					if order[2*i-1] <= nb_teams-matches_to_add*2 :
-						self.tree.create_text(top_x+2,top_y+self.y_size/2+2,anchor="nw",text=names[order[2*i-1]-1])
 						name2 = names[id2-1]
+						self.tree.create_text(top_x+2,top_y+self.y_size/2+2,anchor="nw",text=name2)
 
 
 				decider.append(Match(id1,id2,name1,name2,top_x,top_y,bottom_x,bottom_y,phase))
