@@ -5,6 +5,16 @@ import random
 import sys
 
 
+"""
+Global TODO list :
+* Allow the player to enter the score of a match by clicking on its box in the tree (get mouse click coords), and update tree and decider accordingly
+* For the above, make only matches of the current phase 'selectable' (change when all matches have been played ofc)
+* Graphics : draw connecting lines between boxes
+* Graphics : make smaller boxes for scores
+* Much more... :p
+"""
+
+
 
 # list contanining all matches that have to be played / have been played, in order
 global decider
@@ -27,6 +37,9 @@ class Match :
 	def __repr__(self) :
 
 		return "Match between "+self.name1+" and "+self.name2+ ", played : "+str(self.played)+", during phase : "+str(self.phase)
+
+
+
 
 
 class Window :
@@ -210,6 +223,10 @@ for i in xrange(nb_teams) :
 	names.append("".join([random.choice(['a','z','e','r','t','y','u','i','o','p','q','s','d','f','g','h','j','k','l','m','w','x','c','v','b','n']) for j in xrange(3)]))
 
 pouet.draw_sb(nb_teams,names)
+
+"""
 for match in decider :
 	print match
+"""
+
 pouet.master.mainloop()
