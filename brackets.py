@@ -35,33 +35,33 @@ class Pool:
 
 		while still_playing.values().count(True) > 1 :
 
-			temp = []
+			teams_still_in = []
 			for team in teamlist :
 				if still_playing[team] == True :
-					temp.append(team)
+					teams_still_in.append(team)
 
 
-			for i in xrange(0,len(temp)-1,2) :
+			for i in xrange(0,len(teams_still_in)-1,2) :
 
-				if temp[i] < temp[i+1] :
-					points[temp[i]] += 1
-					still_playing[temp[i+1]] = False
-					owner[temp[i+1]] = temp[i]
+				if teams_still_in[i] < teams_still_in[i+1] :
+					points[teams_still_in[i]] += 1
+					still_playing[teams_still_in[i+1]] = False
+					owner[teams_still_in[i+1]] = teams_still_in[i]
 				else :
-					points[temp[i+1]] += 1
-					still_playing[temp[i]] = False
-					owner[temp[i]] = temp[i+1]
+					points[teams_still_in[i+1]] += 1
+					still_playing[teams_still_in[i]] = False
+					owner[teams_still_in[i]] = teams_still_in[i+1]
 
-			print temp
+			print teams_still_in
 
 		print owner
 		print points
 
-		temp = points.values()
+		cur_points = points.values()
 
 		for team in points.keys() :
 			if owner[team] != 0 :
-				points[team] = temp[team-1] + 0.1*temp[owner[team]-1]
+				points[team] = cur_points[team-1] + 0.1*cur_points[owner[team]-1]
 
 		for team in points.keys() :
 			points[team] = round(points[team],5)
