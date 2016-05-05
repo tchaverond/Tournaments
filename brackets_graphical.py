@@ -13,7 +13,7 @@ decider = []
 
 class Match :
 
-	def __init__(self, id_team1, id_team2, name1, name2, top_x, top_y, bottom_x, bottom_y) :
+	def __init__(self, id_team1, id_team2, name1, name2, top_x, top_y, bottom_x, bottom_y, phase) :
 
 		self.id_team1 = id_team1
 		self.id_team2 = id_team2
@@ -21,11 +21,12 @@ class Match :
 		self.name2 = name2
 		self.coords = [top_x,top_y,bottom_x,bottom_y]
 		self.played = False
+		self.phase = phase
 
 
 	def __repr__(self) :
 
-		return "Match between "+self.name1+" and "+self.name2+ ", has been played : "+str(self.played)
+		return "Match between "+self.name1+" and "+self.name2+ ", played : "+str(self.played)+", during phase : "+str(self.phase)
 
 
 class Window :
@@ -116,7 +117,7 @@ class Window :
 			matches_to_add = min([nb_teams-i for i in mult_2 if (nb_teams-i) > 0])
 			closest_upper = min([i for i in mult_2 if i > nb_teams])
 			suporder = sb_placement(closest_upper)
-			print order,suporder
+			#print order,suporder
 
 			for i in xrange(1,matches_to_add+1,1) :
 
@@ -131,7 +132,7 @@ class Window :
 
 				id1 = suporder[2*order[i-1]-2]
 				id2 = suporder[2*order[i-1]-1]
-				decider.append(Match(id1,id2,names[id1-1],names[id2-1],top_x,top_y,bottom_x,bottom_y))
+				decider.append(Match(id1,id2,names[id1-1],names[id2-1],top_x,top_y,bottom_x,bottom_y,phase-1))
 
 
 
@@ -150,13 +151,25 @@ class Window :
 				self.tree.create_rectangle(top_x,top_y,bottom_x,bottom_y,outline="black")
 				self.tree.create_line(top_x,top_y+self.y_size/2,bottom_x,top_y+self.y_size/2,fill="black")
 
+
+				id1 = order[2*i-2]
+				id2 = order[2*i-1]
+				name1 = "TBD"
+				name2 = "TBD"
+
+
 				if imax == (nb_teams-matches_to_add)/2 :
 
 					if order[2*i-2] <= nb_teams-matches_to_add*2 :
 						self.tree.create_text(top_x+2,top_y+2,anchor="nw",text=names[order[2*i-2]-1])
+						name1 = names[id1-1]
 
 					if order[2*i-1] <= nb_teams-matches_to_add*2 :
 						self.tree.create_text(top_x+2,top_y+self.y_size/2+2,anchor="nw",text=names[order[2*i-1]-1])
+						name2 = names[id2-1]
+
+
+				decider.append(Match(id1,id2,name1,name2,top_x,top_y,bottom_x,bottom_y,phase))
 
 
 			phase += 1
